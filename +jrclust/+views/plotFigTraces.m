@@ -19,7 +19,7 @@ function tracesFilt = plotFigTraces(hFigTraces, hCfg, tracesRaw, resetAxis, hClu
         hCfg.filterType = hCfg.dispFilter;
 
         if hCfg.fftThresh > 0
-            tracesRaw = jrclust.filters.fftClean(tracesRaw, hCft.fftThresh, hCfg);
+            tracesRaw = jrclust.filters.fftClean(tracesRaw, hCfg.fftThresh, hCfg);
         end
 
         tracesFilt = jrclust.filters.filtCAR(tracesRaw(:, viSamples1), [], [], 0, hCfg);
@@ -81,7 +81,7 @@ function tracesFilt = plotFigTraces(hFigTraces, hCfg, tracesRaw, resetAxis, hClu
             offset = sum(cellfun(@(hR) hR.nSamples, hRecs));
         end
 
-        recTimes = hClust.spikeTimes - uint64(offset);
+        recTimes = uint64(hClust.spikeTimes) - uint64(offset);
 
         tStart = single(hFigTraces.figData.windowBounds(1) - 1)/hCfg.sampleRate;
         if hCfg.nSegmentsTraces > 1
