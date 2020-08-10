@@ -1,0 +1,17 @@
+nSites = 32;
+nShank = 2;
+
+channels = (1:nSites*nShank);
+dx = 200;
+dy = 35;
+
+geometry = zeros(nSites*nShank, 2);
+shank = zeros(1,nSites*nShank);
+for iShank = 1:nShank
+    ix = (iShank-1)*nSites + (1:nSites);
+    geometry(ix,1) = (iShank-1)*dx;
+    geometry(ix,2) = dy*((nSites-1):-1:0);
+    shank(ix) = iShank;
+end
+
+pad = [12 12]; %in micrometers, height x width
