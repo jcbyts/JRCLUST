@@ -2,6 +2,10 @@ function [samplesOut, keepMe] = filterSamples(obj, samplesIn, samplesPre, sample
     %FILTERSAMPLES Denoise and filter raw samples, apply CAR
     samplesIn = [samplesPre; samplesIn; samplesPost];
 
+%     if isprop(obj.hCfg, 'artifactThresh') && isprop(obj.hCfg,'artifactNchan')
+%         samplesIn = jrclust.filters.artifactRemoval(samplesIn, obj.hCfg.artifactThresh, obj.hCfg.artifactNchan, obj.hCfg); % fft filter
+%     end
+            
     if obj.hCfg.fftThresh > 0
         samplesIn = jrclust.filters.fftClean(samplesIn, obj.hCfg.fftThresh, obj.hCfg);
     end
