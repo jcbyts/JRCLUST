@@ -59,21 +59,6 @@
             },
             "section": ["spike detection"]
         },
-        "CARMode": {
-            "description": "The meaning of 'average' in 'common average reference'",
-            "comment": "",
-            "default_value": "mean",
-            "validation": {
-                "classes": ["char"],
-                "attributes": ["scalartext"],
-                "values": [
-                    "mean",
-                    "median",
-                    "none"
-                ]
-            },
-            "section": ["spike detection"]
-        },
         "clusterFeature": {
             "description": "The feature to extract from your spike waveforms in order to cluster them",
             "comment": "",

@@ -84,6 +84,11 @@ function samplesOut = doFFTClean(samplesIn, fftThresh, useGPU)
 
     % broaden spectrum
     vrFft = jrclust.utils.tryGather(vrFft);
+%     if fftThresh < 0 % dual sided
+    fftThresh = abs(fftThresh);
+    vrFft = abs(vrFft);
+%     end
+    
     isNoise = vrFft > fftThresh;
     vi_noise = find(isNoise);
     for i_nw = 1:nw

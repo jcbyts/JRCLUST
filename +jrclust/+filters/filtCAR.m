@@ -46,14 +46,41 @@ end
 function [samplesIn, channelMeans] = applyCAR(samplesIn, hCfg)
     %APPLYCAR Perform common average referencing (CAR) on filtered traces
     channelMeans = [];
-
-    if strcmp(hCfg.CARMode, 'mean')
-        channelMeans = meanExcluding(samplesIn, hCfg.ignoreSites);
-        samplesIn = bsxfun(@minus, samplesIn, channelMeans);
-    elseif strcmp(hCfg.CARMode, 'median')
-        channelMeans = medianExcluding(samplesIn, hCfg.ignoreSites);
-        samplesIn = bsxfun(@minus, samplesIn, channelMeans);
+    
+    CARMode = hCfg.CARMode;
+    nind = regexp(CARMode, '\d');
+    if ~isempty(nind)
+        n = str2double(CARMode(nind:end));
+        CARMode = CARMode(1:nind-1);
     end
+    
+    switch CARMode
+        case 'median'
+            car = nanmedian(samplesIn, 2);
+        case 'mean'
+            car = nanmean(samplesIn, 2);
+        case 'locmed'
+            car = zeros(size(samplesIn), 'single');
+            goodsites = ~isnan(sum(samplesIn));
+            car(:,goodsites) = medfilt1(single(samplesIn(:,goodsites)), n, [], 2);
+        case 'locmean'
+            car = zeros(size(samplesIn), 'single');
+            goodsites = ~isnan(sum(samplesIn));
+            I = toeplitz([zeros(1,2) ones(1,n) zeros(1,sum(goodsites)-n-2)]);
+            car(:,goodsites) = single(samplesIn(:,goodsites))*I./sum(I);
+        otherwise
+            car = samplesIn;
+    end
+    
+    samplesIn = bsxfun(@minus, samplesIn, cast(car, 'like', samplesIn));
+    
+%     if strcmp(hCfg.CARMode, 'mean')
+%         channelMeans = meanExcluding(samplesIn, hCfg.ignoreSites);
+%         samplesIn = bsxfun(@minus, samplesIn, channelMeans);
+%     elseif strcmp(hCfg.CARMode, 'median')
+%         channelMeans = medianExcluding(samplesIn, hCfg.ignoreSites);
+%         samplesIn = bsxfun(@minus, samplesIn, channelMeans);
+%     end
 
     samplesIn(:, hCfg.ignoreSites) = 0; % TW do not repair with fMeanSite_drift
 end

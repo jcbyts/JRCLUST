@@ -182,7 +182,7 @@ classdef PreviewController < jrclust.interfaces.FigureController
             obj.menuCheckbox(filterMenu, obj.hCfg.filterType);
 
             refMenu = uimenu(editMenu, 'Label', 'Reference mode');
-            obj.menuOptions(refMenu, {'none', 'mean', 'median'}, @obj.setCARMode); % @TODO: local mean
+            obj.menuOptions(refMenu, {'none', 'mean', 'median', 'locmean4', 'locmean2', 'locmean8', 'locmean16'}, @obj.setCARMode); % @TODO: local mean
             uimenu(editMenu, 'Label', 'Common reference threshold', 'Callback', @(hO, hE) obj.setBlankThresh());
             uimenu(editMenu, 'Label', 'FFT cleanup threshold', 'Callback', @(hO, hE) obj.setFFTThreshMAD());
 
@@ -532,7 +532,7 @@ classdef PreviewController < jrclust.interfaces.FigureController
                 obj.tracesFilt = bsxfun(@minus, obj.tracesFilt, cast(obj.tracesCAR, 'like', obj.tracesFilt));
             end
 
-            obj.tracesCAR = jrclust.utils.madScore(mean(obj.tracesCAR, 2)); % Save in MAD unit
+            obj.tracesCAR = jrclust.utils.madScore(nanmean(obj.tracesCAR, 2)); % Save in MAD unit
 
             % reference threshold
             [rawPSD, obj.psdFreq] = getPSD(obj.tracesRaw(:, ~obj.ignoreMe), obj.hCfg.sampleRate, 4);
@@ -542,7 +542,7 @@ classdef PreviewController < jrclust.interfaces.FigureController
             obj.psdPowerClean = mean(cleanPSD, 2);
 
             % find threshold and detect spikes
-            siteRMS = jrclust.utils.estimateRMS(obj.tracesFilt, 1e5);
+            siteRMS = jrclust.utils.estimateRMS(obj.tracesFilt, 1e6);
             obj.siteThresh = int16(siteRMS * obj.qqFactor);
             obj.siteThresh(obj.ignoreMe) = 0;
 
