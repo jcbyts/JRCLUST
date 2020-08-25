@@ -1,7 +1,11 @@
-function tracesFilt = plotFigTraces(hFigTraces, hCfg, tracesRaw, resetAxis, hClust)
+function tracesFilt = plotFigTraces(hFigTraces, hCfg, tracesRaw, resetAxis, hClust, selected)
     %PLOTFIGTRACES Plot raw traces view
     hBox = jrclust.utils.qMsgBox('Plotting...', 0, 1);
 
+	if nargin < 6
+        selected = [];
+    end
+    
     hFigTraces.wait(1);
 
     sampleRate = hCfg.sampleRate / hCfg.nSkip;
@@ -119,11 +123,12 @@ function tracesFilt = plotFigTraces(hFigTraces, hCfg, tracesRaw, resetAxis, hClu
             end
         else % different color for each cluster
             inRangeClusters = hClust.spikeClusters(spikesInRange);
-            spikeColors = [jet(hClust.nClusters); 0 0 0];
+            
+            spikeColors = [lines(hClust.nClusters); 0 0 0];
             lineWidths = (mod((1:hClust.nClusters) - 1, 3) + 1)'/2 + 0.5;  %(randi(3, S_clu.nClusters, 1)+1)/2;
 
             % shuffle colors
-            spikeColors = spikeColors(randperm(size(spikeColors, 1)), :);
+%             spikeColors = spikeColors(randperm(size(spikeColors, 1)), :);
             lineWidths = lineWidths(randperm(size(lineWidths, 1)), :);
 
             nSpikes = numel(spikeTimes);
@@ -138,7 +143,10 @@ function tracesFilt = plotFigTraces(hFigTraces, hCfg, tracesRaw, resetAxis, hClu
                 iSite = spikeSites(iSpike);
                 iColor = spikeColors(iCluster, :);
                 iLinewidth = lineWidths(iCluster);
-
+                if ismember(selected, iCluster)
+                    iColor = hCfg.colorMap(1+find(iCluster==selected),:);
+                end
+                    
                 [mrY11, mrX11] = vr2mr3_(tracesFilt(iSite, :), iTime, evtWindowSamp); %display purpose x2
                 mrT11 = double(mrX11-1) / sampleRate + tStart;
 

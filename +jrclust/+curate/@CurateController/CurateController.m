@@ -103,6 +103,7 @@ classdef CurateController < handle
         spawnFigures(obj);
         updateHistMenu(obj);
         updateNoteMenu(obj);
+        binaryPursuit(obj);
     end
 
     methods (Static)

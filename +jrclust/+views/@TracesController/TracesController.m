@@ -18,13 +18,19 @@ classdef TracesController < jrclust.interfaces.FigureController
         tracesFull;
         tracesRaw;
         tracesFilt;
+        
+        selected
     end
 
     %% LIFECYCLE
     methods
-        function obj = TracesController(hCfg)
+        function obj = TracesController(hCfg, selected)
             %TRACESCONTROLLER Construct an instance of this class
             obj.hCfg = hCfg;
+            if nargin < 2
+                selected = [];
+            end
+            obj.selected = selected;
         end
     end
 
@@ -219,7 +225,7 @@ classdef TracesController < jrclust.interfaces.FigureController
         end
 
         function updateFigTraces(obj, resetAxes)
-            jrclust.views.plotFigTraces(obj.hFigTraces, obj.hCfg, obj.tracesRaw, resetAxes, obj.hClust);
+            jrclust.views.plotFigTraces(obj.hFigTraces, obj.hCfg, obj.tracesRaw, resetAxes, obj.hClust, obj.selected);
         end
     end
 

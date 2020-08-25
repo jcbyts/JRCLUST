@@ -21,6 +21,7 @@ function addMenu(obj, hFig)
     obj.hMenus('EditMenu') = hFig.uimenu('Label', 'Edit');
     uimenu(obj.hMenus('EditMenu'), 'Label', '[M]erge', 'Callback', @(hO, hE) obj.mergeSelected());
     uimenu(obj.hMenus('EditMenu'), 'Label', 'Merge auto', 'Callback', @(hO, hE) obj.autoMerge());
+    uimenu(obj.hMenus('EditMenu'), 'Label', 'Binary Pursuit', 'Callback', @(hO, hE) obj.binaryPursuit());
     uimenu(obj.hMenus('EditMenu'), 'Label', '[D]elete', 'Callback', @(hO, hE) obj.deleteClusters(), 'Separator', 'on');
     uimenu(obj.hMenus('EditMenu'), 'Label', 'Delete auto', 'Callback', @(hO, hE) obj.autoDelete());
     uimenu(obj.hMenus('EditMenu'), 'Label', 'Delete annotated', 'Callback', @(hO, hE) obj.deleteAnnotated()); % TW
