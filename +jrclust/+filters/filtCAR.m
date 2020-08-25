@@ -69,7 +69,7 @@ function [samplesIn, channelMeans] = applyCAR(samplesIn, hCfg)
             I = toeplitz([zeros(1,2) ones(1,n) zeros(1,sum(goodsites)-n-2)]);
             car(:,goodsites) = single(samplesIn(:,goodsites))*I./sum(I);
         otherwise
-            car = samplesIn;
+            car = zeros(size(samplesIn));
     end
     
     samplesIn = bsxfun(@minus, samplesIn, cast(car, 'like', samplesIn));
