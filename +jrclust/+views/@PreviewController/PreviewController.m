@@ -542,7 +542,11 @@ classdef PreviewController < jrclust.interfaces.FigureController
             obj.psdPowerClean = mean(cleanPSD, 2);
 
             % find threshold and detect spikes
+            
             siteRMS = jrclust.utils.estimateRMS(obj.tracesFilt, 1e6);
+            mRMS = median(siteRMS(~obj.ignoreSites));
+            siteRMS(~obj.ignoreSites) = sqrt(sqrt(siteRMS(~obj.ignoreSites)/mRMS))*mRMS;
+            
             obj.siteThresh = int16(siteRMS * obj.qqFactor);
             obj.siteThresh(obj.ignoreMe) = 0;
 

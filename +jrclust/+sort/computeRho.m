@@ -151,7 +151,7 @@ function rhoCut = estRhoCutGlobal(dRes, hCfg, vlRedo_spk)
         end
 
         siteCuts(iSite) = estRhoCutSite(siteFeatures, spikeOrder, n1, n2, hCfg);
-        hCfg.updateLog('rhoCutSite', sprintf('Estimated rho cutoff for site %d: %0.2f', iSite, res.rhoCutSite(iSite)), 0, 0);
+        hCfg.updateLog('rhoCutSite', sprintf('Estimated rho cutoff for site %d: %0.2f', iSite, siteCuts(iSite)), 0, 0);
     end
 
     rhoCut = sqrt(abs(quantile(siteCuts, .5)));

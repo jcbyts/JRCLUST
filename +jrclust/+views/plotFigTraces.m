@@ -13,6 +13,8 @@ function tracesFilt = plotFigTraces(hFigTraces, hCfg, tracesRaw, resetAxis, hClu
     evtWindowSamp = round(hCfg.evtWindowSamp / hCfg.nSkip); %show 2x of range
 
     if strcmpi(hFigTraces.figData.filter, 'on')
+        
+        tracesRaw = tracesRaw';
         % back up old settings
         sampleRateOld = hCfg.sampleRate;
         filterTypeOld = hCfg.filterType;
@@ -26,8 +28,12 @@ function tracesFilt = plotFigTraces(hFigTraces, hCfg, tracesRaw, resetAxis, hClu
             tracesRaw = jrclust.filters.fftClean(tracesRaw, hCfg.fftThresh, hCfg);
         end
 
-        tracesFilt = jrclust.filters.filtCAR(tracesRaw(:, viSamples1), [], [], 0, hCfg);
-        tracesFilt = jrclust.utils.bit2uV(tracesFilt, hCfg);
+        hCfg.useGPUFilt = hCfg.useGPU;
+        tracesFilt = jrclust.filters.bandpassFilter(tracesRaw(viSamples1,:), hCfg);
+        
+        tracesFilt = jrclust.filters.filtCAR(tracesFilt, [], [], 0, hCfg);
+
+        tracesFilt = jrclust.utils.bit2uV(tracesFilt, hCfg)';
         filterToggle = hCfg.filterType;
 
         % restore old settings

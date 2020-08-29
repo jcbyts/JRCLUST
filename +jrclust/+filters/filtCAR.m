@@ -17,7 +17,8 @@ function [samplesOut, channelMeans] = filtCAR(samplesIn, windowPre, windowPost, 
     if hCfg.useGPU
         samplesOut = jrclust.utils.tryGpuArray(samplesOut, hCfg.useGPU);
     end
-
+    
+    
     % apply filter
     if strcmp(hCfg.filterType, 'user')
         samplesOut = jrclust.filters.userFilter(samplesOut, hCfg.userFiltKernel);
@@ -53,6 +54,7 @@ function [samplesIn, channelMeans] = applyCAR(samplesIn, hCfg)
         n = str2double(CARMode(nind:end));
         CARMode = CARMode(1:nind-1);
     end
+    samplesIn(:,hCfg.ignoreChans) = nan;
     
     switch CARMode
         case 'median'
