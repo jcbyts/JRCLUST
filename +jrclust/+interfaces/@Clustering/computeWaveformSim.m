@@ -44,8 +44,12 @@ function computeWaveformSim(obj, updateMe)
     end
 
     if usePeak2
-        [peaks1, peaks2, peaks3] = obj.getSecondaryPeaks();
-        clusterSites_ = {peaks1, peaks2, peaks3};
+        try
+            [peaks1, peaks2, peaks3] = obj.getSecondaryPeaks();
+            clusterSites_ = {peaks1, peaks2, peaks3};
+        catch
+            clusterSites_ = {obj.clusterSites};
+        end
     else
         clusterSites_ = {obj.clusterSites};
     end
