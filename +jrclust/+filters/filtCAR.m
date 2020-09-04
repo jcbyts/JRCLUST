@@ -12,15 +12,17 @@ function [samplesOut, channelMeans] = filtCAR(samplesIn, windowPre, windowPost, 
 
     nPadPre = size(windowPre, 1);
     nPadPost = size(windowPost, 1);
-
-    samplesOut = [windowPre; samplesIn; windowPost];
+    samplesIn = single(samplesIn);
+    samplesOut = single([windowPre; samplesIn; windowPost]);
     if hCfg.useGPU
         samplesOut = jrclust.utils.tryGpuArray(samplesOut, hCfg.useGPU);
     end
     
     
     % apply filter
-    if strcmp(hCfg.filterType, 'user')
+    if strcmp(hCfg.filterType, 'differ')
+        samplesOut = jrclust.filters.differFilter(samplesOut, hCfg.nDiffOrder, hCfg.sampleRate, hCfg.freqLimBP);
+    elseif strcmp(hCfg.filterType, 'user')
         samplesOut = jrclust.filters.userFilter(samplesOut, hCfg.userFiltKernel);
     elseif strcmp(hCfg.filterType, 'fir1')
         samplesOut = jrclust.filters.fir1Filter(samplesOut, ceil(5*hCfg.sampleRate/1000), 2*hCfg.freqLimBP/hCfg.sampleRate);
@@ -66,7 +68,7 @@ function [samplesIn, channelMeans] = applyCAR(samplesIn, hCfg)
             goodsites = ~isnan(sum(samplesIn));
             car(:,goodsites) = medfilt1(single(samplesIn(:,goodsites)), n, [], 2);
         case 'locmean'
-            car = zeros(size(samplesIn), 'single');
+            car = zeros(size(samplesIn), 'like', samplesIn);
             goodsites = ~isnan(sum(samplesIn));
             I = toeplitz([zeros(1,2) ones(1,n) zeros(1,sum(goodsites)-n-2)]);
             car(:,goodsites) = single(samplesIn(:,goodsites))*I./sum(I);

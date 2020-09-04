@@ -25,9 +25,16 @@ function [shiftMe, shiftBy] = findShifted(spikeWindows, hCfg)
     %FINDSHIFTED
     %   spikeWindows: nSamples x nSpikes x nSites
     peakLoc = 1 - hCfg.evtWindowSamp(1);
-
+    wts = exp( -((1:size(spikeWindows,1)) - peakLoc).^2/200); % bias peak-finding towards current peakLoc
     if hCfg.detectBipolar
-        [~, truePeakLoc] = max(abs(spikeWindows(:, :, 1)));
+        [val0, truePeakLoc0] = max(abs(spikeWindows(:, :, 1)).*wts(:));
+        [val1, truePeakLoc1] = min(spikeWindows(:, :, 1));
+        val1 = abs(val1);
+        truePeakLoc = truePeakLoc0;
+        d = (val1./val0);
+        iix = d >= 1;
+        truePeakLoc( iix ) = truePeakLoc1( iix ); % negative "peaks" should be aligned to if they exist
+        
     else
         [~, truePeakLoc] = min(spikeWindows(:, :, 1));
     end
@@ -35,7 +42,7 @@ function [shiftMe, shiftBy] = findShifted(spikeWindows, hCfg)
     shiftMe = find(truePeakLoc ~= peakLoc);
     shiftBy = peakLoc - truePeakLoc(shiftMe);
 
-    shiftOkay = (abs(shiftBy) <= 2); % throw out drastic shifts
+    shiftOkay = (abs(shiftBy) <= 8); % throw out drastic shifts
     shiftMe = shiftMe(shiftOkay);
     shiftBy = shiftBy(shiftOkay);
 end

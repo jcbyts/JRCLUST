@@ -1,4 +1,4 @@
-function [features1, features2, features3] = spikePCA(spikeWindows, hCfg)
+function [features1, features2, features3] = spikeSVD(spikeWindows, hCfg)
     %SPIKEPCA Project spikes onto their principal components
     % if strcmpi(hCfg.vcFet, 'pca')
     prVecs = spikePrVecs(spikeWindows, hCfg);
@@ -25,13 +25,7 @@ function [prVecs, eigVals] = spikePrVecs(spikeWindows, hCfg)
     ss = jrclust.utils.subsample(1:size(spikeWindows, 2), MAX_SAMPLE);
     spikeSample = spikeWindows(:, ss, 1);
 
-    covMat = (spikeSample*spikeSample')/(numel(ss)-1);
-
-    [eigVecs, eigVals] = eig(covMat);
-    % MATLAB returns value-vector pairs smallest to largest; flip them
-    eigVecs = jrclust.utils.zscore(fliplr(eigVecs));
-    eigVals = flipud(diag(eigVals));
-
+    [eigVecs, eigVals] = svd(spikeSample);
     
     if hCfg.detectBipolar
         sgn = ones(1, size(eigVecs, 2));

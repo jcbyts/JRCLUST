@@ -6,8 +6,9 @@ function siteThresh = computeThreshold(obj, samplesIn)
         samplesIn = jrclust.utils.tryGpuArray(samplesIn, obj.hCfg.useGPU);
         
         siteRMS = jrclust.utils.estimateRMS(samplesIn, maxSample);
-        mRMS = median(siteRMS(~obj.hCfg.ignoreSites));
-        siteRMS(~obj.hCfg.ignoreSites) = sqrt(sqrt(siteRMS(~obj.hCfg.ignoreSites)/mRMS))*mRMS;
+        chinds = setdiff(1:numel(siteRMS),obj.hCfg.ignoreSites);
+        mRMS = median(siteRMS(chinds));
+        siteRMS(chinds) = sqrt(sqrt(siteRMS(chinds)/mRMS))*mRMS;
         siteThresh = siteRMS*obj.hCfg.qqFactor;
         
         [samplesIn, siteThresh] = jrclust.utils.tryGather(samplesIn, siteThresh); %#ok<ASGLU>

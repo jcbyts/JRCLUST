@@ -73,6 +73,7 @@
                     "pca",
                     "vmin",
                     "vminmax",
+                    "svd",
                     "vpp"
                 ]
             },
@@ -205,6 +206,7 @@
                     "bandpass",
                     "fir1",
                     "user",
+                    "differ",
                     "none"
                 ]
             },
@@ -1200,7 +1202,7 @@
                     "scalar",
                     "integer",
                     "nonnegative",
-                    "<=", 3
+                    "<=", 50
                 ]
             },
             "section": ["preprocessing"]

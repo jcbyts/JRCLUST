@@ -20,19 +20,22 @@ function res = computeDelta(dRes, res, hCfg)
         if isfield(dRes, 'spikesBySite')
             spikeData.spikes1 = dRes.spikesBySite{iSite};
         else
-            spikeData.spikes1 = dRes.spikeSites(dRes.spikeSites==iSite);
+            spikeData.spikes1 = find(dRes.spikeSites==iSite);
+%             spikeData.spikes1 = dRes.spikeSites(dRes.spikeSites==iSite);
         end
 
         if isfield(dRes, 'spikesBySite2') && ~isempty(dRes.spikesBySite2)
             spikeData.spikes2 = dRes.spikesBySite2{iSite};
         elseif isfield(dRes, 'spikeSites2')
-            spikeData.spikes2 = dRes.spikeSites2(dRes.spikeSites2==iSite);
+            spikeData.spikes2 = find(dRes.spikeSites2==iSite);
+%             spikeData.spikes2 = dRes.spikeSites2(dRes.spikeSites2==iSite);
         end
 
         if isfield(dRes, 'spikesBySite3') && ~isempty(dRes.spikesBySite3)
             spikeData.spikes3 = dRes.spikesBySite3{iSite};
         elseif isfield(dRes, 'spikeSites3')
-            spikeData.spikes3 = dRes.spikeSites3(dRes.spikeSites3==iSite);
+            spikeData.spikes3 = find(dRes.spikeSites3==iSite);
+%             spikeData.spikes3 = dRes.spikeSites3(dRes.spikeSites3==iSite);
         end
 
         [siteFeatures, spikes, n1, n2, spikeOrder] = jrclust.features.getSiteFeatures(dRes.spikeFeatures, iSite, spikeData, hCfg);

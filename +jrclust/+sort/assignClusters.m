@@ -35,7 +35,7 @@ end
 function sRes = computeCenters(dRes, sRes, hCfg)
     %COMPUTECENTERS Find cluster centers
     if ~isfield(dRes, 'spikesBySite')
-        dRes.spikesBySite = arrayfun(@(iSite) dRes.spikes(dRes.spikeSites==iSite), hCfg.siteMap, 'UniformOutput', 0);
+        dRes.spikesBySite = arrayfun(@(iSite) find(dRes.spikeSites==iSite), hCfg.siteMap, 'UniformOutput', 0);
     end
 
     if strcmp(hCfg.RDDetrendMode, 'local')      % perform detrending site by site

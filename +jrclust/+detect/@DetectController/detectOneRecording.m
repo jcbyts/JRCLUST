@@ -63,7 +63,7 @@ function recData = detectOneRecording(obj, hRec, fids, impTimes, impSites, siteT
             iSamplesRaw = [samplesPre; iSamplesRaw; samplesPost];
             
             if isprop(obj.hCfg, 'artifactThresh') && isprop(obj.hCfg,'artifactNchan')
-                obj.tracesRaw = jrclust.filters.artifactRemoval(obj.tracesRaw, obj.hCfg.artifactThresh, obj.hCfg.artifactNchan, obj.hCfg); % fft filter
+                iSamplesRaw = jrclust.filters.artifactRemoval(iSamplesRaw, obj.hCfg.artifactThresh, obj.hCfg.artifactNchan, obj.hCfg); % fft filter
             end
             
             if obj.hCfg.fftThresh > 0

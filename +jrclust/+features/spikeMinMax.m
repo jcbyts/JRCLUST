@@ -7,7 +7,7 @@ function [spikeMin, spikeMax, vpp] = spikeMinMax(spikeWindows)
         vpp = spikeMax - spikeMin;
     end
 
-    spikeMin = abs(spikeMin);
-    spikeMax = abs(spikeMax);
+%     spikeMin = abs(spikeMin);
+%     spikeMax = abs(spikeMax);
 end
 

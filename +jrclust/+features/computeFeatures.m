@@ -11,8 +11,9 @@ function [features1, features2, features3, spikeWindows] = computeFeatures(spike
     if hCfg.getOr('realignTraces', 0) ~= 1
         spikeWindows = jrclust.utils.localCAR(spikeWindows, hCfg, nSitesEvt, []);
     end
-
-    if strcmp(hCfg.clusterFeature, 'cov')
+    if strcmp(hCfg.clusterFeature, 'svd')
+        [features1, features2, features3] = jrclust.features.spikeSVD(spikeWindows, hCfg);
+    elseif strcmp(hCfg.clusterFeature, 'cov')
         [features1, features2] = jrclust.features.spikeCov(spikeWindows, hCfg);
     elseif strcmp(hCfg.clusterFeature, 'vpp')
         [~, ~, features1] = jrclust.features.spikeMinMax(spikeWindows);

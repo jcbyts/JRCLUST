@@ -53,7 +53,13 @@ classdef SortController < handle
             res.initialClustering = res.spikeClusters;
             hClust = jrclust.sort.DensityPeakClustering(obj.hCfg, res, dRes);
             hClust.autoMerge();
+            
+            for iCluster = 1:hClust.nClusters
+                n = hClust.rmRefracSpikes(iCluster);
+                fprintf('Removed %d refractory violations\n', n)
+            end
 
+            hClust.computeQualityScores([]);
             res.hClust = hClust;
 
             % if get_set_(P, 'fCorrect_overlap', 0) % correct waveforms and features after correcting clusters
